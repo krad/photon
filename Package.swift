@@ -16,7 +16,7 @@ let package = Package(
     targets: [
         .target(
             name: "photon",
-            dependencies: ["Socket", "Result"]),
+            dependencies: ["Socket"]),
         .testTarget(
             name: "photonTests",
             dependencies: ["photon"]),
