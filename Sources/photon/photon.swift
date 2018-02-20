@@ -15,8 +15,8 @@ class Photon: APIClient {
     }
     
     func send<T>(_ request: T, completion: @escaping ResultCallback<T.Response>) where T: APIRequest {
-        let url = self.endpoint(for: request)
-        let task = self.session.dataTask(with: URLRequest(url: url)) { data, response, err in
+        let req = self.urlRequest(for: request)
+        let task = self.session.dataTask(with: req) { data, response, err in
             if let jsonData = data {
                 do {
                     let apiResponse = try JSONDecoder().decode(T.Response.self, from: jsonData)
@@ -27,6 +27,25 @@ class Photon: APIClient {
             }
         }
         task.resume()
+    }
+    
+    private func urlRequest<T: APIRequest>(for apiRequest: T) -> URLRequest {
+        let url             = self.endpoint(for: apiRequest)
+        var request         = URLRequest(url: url)
+        request.addValue("application/json", forHTTPHeaderField: "Content-Type")
+        request.addValue("application/json", forHTTPHeaderField: "Accept")
+        request.httpMethod  = apiRequest.method.rawValue
+        
+        if apiRequest.method == .post {
+            do {
+                let body = try JSONEncoder().encode(apiRequest)
+                request.httpBody = body
+            } catch let err {
+                print("Error making request", err)
+            }
+        }
+        
+        return request
     }
     
     private func endpoint<T: APIRequest>(for request: T) -> URL {

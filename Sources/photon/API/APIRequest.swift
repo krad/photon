@@ -5,7 +5,7 @@ public protocol APIRequest: Encodable {
     var resourceName: String { get }
 }
 
-public enum APIRequestMethod {
-    case get
-    case post
+public enum APIRequestMethod: String {
+    case get  = "GET"
+    case post = "POST"
 }
