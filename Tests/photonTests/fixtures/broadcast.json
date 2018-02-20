@@ -1,0 +1,22 @@
+{
+  "userID": "9f0ed131-1f9e-48f4-a8e0-99ad2f19601a",
+  "updatedAt": 1518334429921,
+  "broadcastID": "9160d225-4f8d-4891-b41f-3d68388b748d",
+  "status": "DONE",
+  "thumbnails": [
+    "0.jpg",
+    "1.jpg",
+    "2.jpg",
+    "3.jpg",
+  ],
+  "createdAt": 1518044489848,
+  "title": "broadcast fixture",
+  "user": {
+    "userID": "9f0ed131-1f9e-48f4-a8e0-99ad2f19601a",
+    "lastName": "Test",
+    "updatedAt": 1514330451495,
+    "createdAt": 1514330408212,
+    "username": "mmmm",
+    "firstName": "krad"
+  },
+}
