@@ -8,7 +8,7 @@ public struct UpdateBroadcast: APIRequest {
     public var method: APIRequestMethod { return .post }
     public var broadcast: Broadcast
     
-    init(_ broadcast: Broadcast) {
+    public init(_ broadcast: Broadcast) {
         self.broadcast = broadcast
     }
 }

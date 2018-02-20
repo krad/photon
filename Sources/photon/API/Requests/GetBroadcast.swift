@@ -6,7 +6,7 @@ public struct GetBroadcast: APIRequest {
     
     var broadcastID: String
     
-    init(_ broadcastID: String) {
+    public init(_ broadcastID: String) {
         self.broadcastID = broadcastID
     }
 }
