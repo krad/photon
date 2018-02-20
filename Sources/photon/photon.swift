@@ -1,20 +1,20 @@
 import Foundation
 
-class Photon: APIClient {
+public class Photon: APIClient {
     
     private var host: String
     private var proto: String = "https"
     private let session: URLSessionProtocol
     
-    init(host: String,
-         proto: String? = nil,
-         session: URLSessionProtocol = URLSession(configuration: .default))
+    public init(host: String,
+                proto: String? = nil,
+                session: URLSessionProtocol = URLSession(configuration: .default))
     {
         self.host = host
         self.session = session
     }
     
-    func send<T>(_ request: T, completion: @escaping ResultCallback<T.Response>) where T: APIRequest {
+    public func send<T>(_ request: T, completion: @escaping ResultCallback<T.Response>) where T: APIRequest {
         let req = self.urlRequest(for: request)
         let task = self.session.dataTask(with: req) { data, response, err in
             if let jsonData = data {
