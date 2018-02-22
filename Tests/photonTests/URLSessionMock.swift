@@ -32,6 +32,7 @@ class MockURLSession: URLSessionProtocol {
         if let idx = self.tasks.index(of: task) {
             self.responses.remove(at: idx)
             self.tasks.remove(at: idx)
+            self.taskCnt -= 1 
         }
     }
 
@@ -54,7 +55,12 @@ class MockDataTask: URLSessionDataTaskProtocol {
     }
     
     func resume() {
-        completionHandler(self.response, nil, nil)
+        let httpResponse = HTTPURLResponse(url: URL(fileURLWithPath: "/tmp"),
+                                           statusCode: 200,
+                                           httpVersion: nil,
+                                           headerFields: nil)
+        
+        completionHandler(self.response, httpResponse, nil)
         self.resumeCalled(self)
     }
     

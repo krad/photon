@@ -19,8 +19,17 @@ public class Photon: APIClient {
         let task = self.session.dataTask(with: req) { data, response, err in
             if let jsonData = data {
                 do {
-                    let apiResponse = try JSONDecoder().decode(T.Response.self, from: jsonData)
-                    completion(.success(apiResponse))
+                    if let httpResponse = response as? HTTPURLResponse {
+                        if httpResponse.statusCode == 200 {
+                            let apiResponse = try JSONDecoder().decode(T.Response.self, from: jsonData)
+                            completion(.success(apiResponse))
+                        } else {
+                            print(String(data: jsonData, encoding: .utf8))
+                            let errorResponse = try JSONDecoder().decode(APIResponseError.self,
+                                                                         from: jsonData)
+                            completion(.failure(errorResponse))
+                        }
+                    }
                 } catch let err {
                     completion(.failure(err))
                 }
@@ -28,6 +37,7 @@ public class Photon: APIClient {
         }
         task.resume()
     }
+    
     
     private func urlRequest<T: APIRequest>(for apiRequest: T) -> URLRequest {
         let url             = self.endpoint(for: apiRequest)
