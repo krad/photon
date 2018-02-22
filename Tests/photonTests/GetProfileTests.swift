@@ -8,7 +8,7 @@ class GetProfileTests: XCTestCase {
         XCTAssert(queue(response: "user.json", into: session))
         XCTAssert(queue(response: "user.json", into: session))
 
-        let client = Photon(host: "krad.tv", session: session)
+        let client = PhotonWebAPI(host: "krad.tv", session: session)
         
         let login = PhoneLogin(countryCode: .usa, phoneNumber: "5555551212", password: "password")
         let l = self.expectation(description: "We need to login first")

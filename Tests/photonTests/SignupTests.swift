@@ -7,7 +7,7 @@ class SignupTests: XCTestCase {
         let session     = MockURLSession()
         XCTAssert(queue(response: "user_signup.json", into: session))
 
-        let client      = Photon(host: "krad.tv", session: session)
+        let client      = PhotonWebAPI(host: "krad.tv", session: session)
         let req         = PhoneSignup(countryCode: .usa, phoneNumber: "5555551212")
         
         let e = self.expectation(description: "We should be able to signup")

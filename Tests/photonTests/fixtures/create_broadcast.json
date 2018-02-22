@@ -1,0 +1,28 @@
+
+{
+    "userID": "fd66dd55-d47a-441f-a375-140186f732a1",
+    "title": "Fake test broadcast from test harness",
+    "status": "INIT",
+    "broadcastID": "e8379dc1-d0f9-4c2a-accc-be98f7220d06",
+    "createdAt": 1519337767253,
+    "pupil": [
+              {
+              "host": "pupil-loadbalancer.at.east.krad.tv",
+              "ports": [
+                        {
+                        "protocol": "tcp",
+                        "port": 42000
+                        }
+                        ]
+              },
+              {
+              "host": "pupil-loadbalancer.at.west.krad.tv",
+              "ports": [
+                        {
+                        "protocol": "tcp",
+                        "port": 42000
+                        }
+                        ]
+              }
+              ]
+}

@@ -10,7 +10,7 @@ class photonTests: XCTestCase {
         
         let broadcastID = "9160d225-4f8d-4891-b41f-3d68388b748d"
         let request     = GetBroadcast(broadcastID)
-        let client      = Photon(host: "krad.tv", session: session)
+        let client      = PhotonWebAPI(host: "krad.tv", session: session)
 
         let e = self.expectation(description: "Should be able to get a broadcast from the API")
         client.send(request) { result in

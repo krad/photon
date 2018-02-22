@@ -7,7 +7,7 @@ class LoginTests: XCTestCase {
         let session     = MockURLSession()
         XCTAssert(queue(response: "user.json", into: session))
 
-        let client      = Photon(host: "krad.tv", session: session)
+        let client      = PhotonWebAPI(host: "krad.tv", session: session)
         let req         = PhoneLogin(countryCode: .usa,
                                      phoneNumber: "5551212",
                                      password: "password")
