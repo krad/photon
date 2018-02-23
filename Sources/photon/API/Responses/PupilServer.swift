@@ -7,7 +7,7 @@ public struct PupilServer: Codable {
 
 public struct PupilPort: Codable {
     public var proto: String
-    public var port: Int
+    public var port: Int32
     
     enum CodingKeys: String, CodingKey {
         case proto = "protocol"

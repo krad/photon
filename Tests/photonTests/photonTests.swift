@@ -2,30 +2,32 @@ import XCTest
 @testable import photon
 
 class photonTests: XCTestCase {
-    
-    func test_that_we_can_get_a_broadcast() {
-        
-        let session     = MockURLSession()
-        XCTAssert(queue(response: "broadcast.json", into: session))
-        
-        let broadcastID = "9160d225-4f8d-4891-b41f-3d68388b748d"
-        let request     = GetBroadcast(broadcastID)
-        let client      = PhotonWebAPI(host: "krad.tv", session: session)
 
-        let e = self.expectation(description: "Should be able to get a broadcast from the API")
-        client.send(request) { result in
-            switch result {
-            case .success(let v):
-                XCTAssertEqual(v.broadcastID, broadcastID)
-            case .failure(_):
-                XCTFail("We failed to get a broadcast")
-            }
+    func test_that_we_can_start_a_new_broadcast_stream() {
+        
+        let s = self.expectation(description: "Server startup")
+        let server = try? Server(42000) {
+            s.fulfill()
+        }
+        self.wait(for: [s], timeout: 1)
+        
+        let session    = MockURLSession()
+        let fakeClient = PhotonWebAPI(host: "krad.tv", session: session)
+        
+        let photon     = Photon("staging.krad.tv")
+        photon.webClient = fakeClient
+        
+        XCTAssertTrue(queue(response: "create_broadcast.json", into: session))
+        
+        let e = self.expectation(description: "Should return a socket connected to the streaming server")
+        photon.startBroadcast(name: "My Fake Broadcast") { socket, err in
+            XCTAssertNil(err)
+            XCTAssertNotNil(socket)
             e.fulfill()
         }
+        self.wait(for: [e], timeout: 1)
         
-        self.wait(for: [e], timeout: 2)
-        
-        
+        server?.stop()
     }
 
 }
