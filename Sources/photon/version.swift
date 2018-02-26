@@ -8,8 +8,9 @@ let release_name = "caffeinated crackup"
     var systemVersion   = ProcessInfo.processInfo.operatingSystemVersionString
 
 #elseif os(iOS)
-    var operatingSystem = "iOS"
-    var systemVersion   = UIDevice.current.systemVersion
+    import UIKit
+    var operatingSystem: String = "iOS"
+    var systemVersion           = UIDevice.current.systemVersion
 #endif
 
-let userAgent = "photon v\(version) - \(release_name) - \(operatingSystem) \(systemVersion)"
+let userAgent: String = "photon v\(version) - \(release_name) - \(operatingSystem) \(systemVersion)"
