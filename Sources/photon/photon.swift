@@ -50,7 +50,7 @@ public class Photon: PhotonProtocol {
         }
     }
     
-    func update(broadcast: Broadcast) {
+    public func update(broadcast: Broadcast) {
         let request = UpdateBroadcast(broadcastID: broadcast.broadcastID,
                                       title: broadcast.broadcastID,
                                       status: broadcast.status,
