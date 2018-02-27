@@ -2,6 +2,11 @@ import XCTest
 @testable import photon
 
 class CreateBroadcastTests: XCTestCase {
+    
+    override func setUp() {
+        super.setUp()
+        self.continueAfterFailure = false
+    }
 
     func test_that_we_can_create_a_broadcast() {
         
@@ -38,5 +43,5 @@ class CreateBroadcastTests: XCTestCase {
         }
         self.wait(for: [e], timeout: 5)
     }
-    
+        
 }

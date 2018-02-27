@@ -12,6 +12,7 @@ public protocol PupilSocketProtocol {
 public enum PupilSocketError: Error {
     case protocolsNotSupport
     case noServers
+    case couldNotConnectToServers
 }
 
 public class PupilSocket: PupilSocketProtocol {
@@ -61,11 +62,16 @@ public class PupilSocket: PupilSocketProtocol {
                     onReady(pupil, nil)
                     sync.leave()
                 }
-            } catch {
+                return
+            } catch let error {
+                print("Problem setting up pupil socket session:", error)
                 sync.leave()
             }
-            _ = sync.wait(timeout: .now() + 3)
+            
+            sync.wait()
         }
+        
+        onReady(nil, PupilSocketError.couldNotConnectToServers)
         
     }
 

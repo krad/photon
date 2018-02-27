@@ -14,7 +14,7 @@ class photonTests: XCTestCase {
         let session    = MockURLSession()
         let fakeClient = PhotonWebAPI(host: "krad.tv", session: session)
         
-        let photon     = Photon("staging.krad.tv")
+        let photon     = Photon("krad.tv")
         photon.webClient = fakeClient
         
         XCTAssertTrue(queue(response: "create_broadcast.json", into: session))
