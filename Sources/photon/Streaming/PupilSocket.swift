@@ -97,7 +97,7 @@ public class PupilSocket: PupilSocketProtocol {
     }
     
     internal func setup(with identifier: String, onReady: @escaping (PupilSocket) -> ()) {
-        self.socketQ.async {
+        self.socketQ.async {[unowned self] in
             var readBuf = Data(capacity: 1024)
             repeat {
                 do {
@@ -112,6 +112,7 @@ public class PupilSocket: PupilSocketProtocol {
                             case "BEGIN\n":
                                 print("Begining")
                                 onReady(self)
+                                self.running = false
                             default:
                                 _=0+0
                             }
