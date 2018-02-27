@@ -11,7 +11,7 @@ let release_name = "caffeinated crackup"
     var operatingSystem: String = "iOS"
     var systemVersion           = UIDevice.current.systemVersion
 #elseif os(Linux)
-    var operationSystem: String = "Linux"
+    var operatingSystem: String = "Linux"
     var systemVersion           = "Proper support coming soon."
 #endif
 
