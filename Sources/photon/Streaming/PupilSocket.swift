@@ -52,23 +52,15 @@ public class PupilSocket: PupilSocketProtocol {
             onReady(nil, PupilSocketError.noServers)
             return
         }
-            
-        let sync = DispatchGroup()
-            
+        
         for server in servers {
-            sync.enter()
             do {
-                try PupilSocket.setup(broadcast.broadcastID, on: server) { pupil in
-                    onReady(pupil, nil)
-                    sync.leave()
-                }
+                let socket = try PupilSocket.setup(broadcast.broadcastID, on: server)
+                onReady(socket, nil)
                 return
             } catch let error {
                 print("Problem setting up pupil socket session:", error)
-                sync.leave()
             }
-            
-            sync.wait()
         }
         
         onReady(nil, PupilSocketError.couldNotConnectToServers)
@@ -76,10 +68,15 @@ public class PupilSocket: PupilSocketProtocol {
     }
 
     internal static func setup(_ identifier: String,
-                               on server: PupilServer,
-                               onReady: @escaping (PupilSocket) -> ()) throws
+                               on server: PupilServer) throws -> PupilSocket
     {
-        _ = try PupilSocket(identifier: identifier, server: server, onReady: onReady)
+        let sync = DispatchGroup()
+        sync.enter()
+        let socket = try PupilSocket(identifier: identifier, server: server, onReady: { ps in
+            sync.leave()
+        })
+        sync.wait()
+        return socket
     }
     
     internal init(identifier: String, server: PupilServer,  onReady: @escaping (PupilSocket) -> ()) throws {
