@@ -85,6 +85,7 @@ public class PupilSocket: PupilSocketProtocol {
     internal init(identifier: String, server: PupilServer,  onReady: @escaping (PupilSocket) -> ()) throws {
         if let port = server.ports.filter({ $0.proto == "tcp" }).first {
             let sock = try Socket.create()
+            print("Attempting to connect to \(server.host):\(port.port)")
             try sock.connect(to: server.host, port: port.port, timeout: 3)
             
             self.running        = true
@@ -109,9 +110,11 @@ public class PupilSocket: PupilSocketProtocol {
                         if let msg = String(data: readBuf[0..<read], encoding: .utf8) {
                             switch msg {
                             case "HI\n":
+                                print("Got greeting")
                                 try self.socket.write(from: "\(identifier)\n")
                                 readBuf.count = 0
                             case "BEGIN\n":
+                                print("Begining")
                                 onReady(self)
                             default:
                                 _=0+0
