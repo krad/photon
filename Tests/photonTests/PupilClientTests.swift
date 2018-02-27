@@ -41,7 +41,7 @@ class PupilClientTests: XCTestCase {
         self.wait(for: [e], timeout: 2)
         
         let e2 = self.expectation(description: "Connecting using broadcast info")
-        PupilSocket.createStream(for: broadcast) { socket, err in
+        PupilSocket.createStream(for: broadcast) { broadcast, socket, err in
             XCTAssertNil(err)
             XCTAssertNotNil(socket)
             e2.fulfill()
@@ -70,7 +70,7 @@ class PupilClientTests: XCTestCase {
         self.wait(for: [e], timeout: 2)
         
         let e2 = self.expectation(description: "Attempt to connect to multiple servers")
-        PupilSocket.createStream(for: broadcast) { ps, err in
+        PupilSocket.createStream(for: broadcast) { broadcast, ps, err in
             XCTAssertNil(err)
             XCTAssertNotNil(ps)
             XCTAssertNotNil(ps?.hostName)

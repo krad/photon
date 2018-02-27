@@ -20,7 +20,7 @@ class photonTests: XCTestCase {
         XCTAssertTrue(queue(response: "create_broadcast.json", into: session))
         
         let e = self.expectation(description: "Should return a socket connected to the streaming server")
-        photon.startBroadcast(name: "My Fake Broadcast") { socket, err in
+        photon.startBroadcast(name: "My Fake Broadcast") { broadcast, socket, err in
             XCTAssertNil(err)
             XCTAssertNotNil(socket)
             e.fulfill()
