@@ -1,7 +1,7 @@
 import Foundation
 import Socket
 
-public typealias BroadcastBeginCallback = (PupilSocket?, Error?) -> Void
+public typealias BroadcastBeginCallback = (Broadcast?, PupilSocket?, Error?) -> Void
 
 public protocol PupilSocketProtocol {
     static func createStream(for broadcast: Broadcast, onReady: @escaping BroadcastBeginCallback)
@@ -49,21 +49,21 @@ public class PupilSocket: PupilSocketProtocol {
                                     onReady: @escaping BroadcastBeginCallback)
     {
         guard let servers = broadcast.pupil else {
-            onReady(nil, PupilSocketError.noServers)
+            onReady(broadcast, nil, PupilSocketError.noServers)
             return
         }
         
         for server in servers {
             do {
                 let socket = try PupilSocket.setup(broadcast.broadcastID, on: server)
-                onReady(socket, nil)
+                onReady(broadcast, socket, nil)
                 return
             } catch let error {
                 print("Problem setting up pupil socket session:", error)
             }
         }
         
-        onReady(nil, PupilSocketError.couldNotConnectToServers)
+        onReady(broadcast, nil, PupilSocketError.couldNotConnectToServers)
         
     }
 

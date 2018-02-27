@@ -40,7 +40,7 @@ public class Photon: PhotonProtocol {
             case .success(let broadcast):
                 PupilSocket.createStream(for: broadcast, onReady: onReady)
             case .failure(let error):
-                onReady(nil, error)
+                onReady(nil, nil, error)
             }
         }
     }

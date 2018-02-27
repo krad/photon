@@ -32,7 +32,7 @@ class photonTests: XCTestCase {
     
 //    func test_comeon() {
 //        let photon = Photon("krad.tv")
-//        
+//
 //        let e = self.expectation(description: "actually hit the api")
 //        photon.login(countryCode: .usa,
 //                     phoneNumber: "5555551212",
@@ -49,7 +49,7 @@ class photonTests: XCTestCase {
 //                e.fulfill()
 //            })
 //        }
-//        
+//
 //        self.wait(for: [e], timeout: 10)
 //
 //    }
