@@ -10,6 +10,7 @@ public class Photon: PhotonProtocol {
     
     internal var webClient: PhotonWebAPI
     internal var currentUser: User?
+    internal var currentBroadcast: Broadcast?
     
     public init(_ host: String) {
         self.webClient = PhotonWebAPI(host: host)
@@ -38,11 +39,30 @@ public class Photon: PhotonProtocol {
         self.webClient.send(request) { (result) in
             switch result {
             case .success(let broadcast):
-                PupilSocket.createStream(for: broadcast, onReady: onReady)
+                PupilSocket.createStream(for: broadcast) { b, ps, err in
+                    if let _ = ps { self.currentBroadcast = broadcast }
+                    else { self.currentBroadcast = nil }
+                    onReady(b, ps, err)
+                }
             case .failure(let error):
                 onReady(nil, nil, error)
             }
         }
     }
-        
+    
+    func update(broadcast: Broadcast) {
+        let request = UpdateBroadcast(broadcastID: broadcast.broadcastID,
+                                      title: broadcast.broadcastID,
+                                      status: broadcast.status,
+                                      thumbnails: broadcast.thumbnails)
+        self.webClient.send(request) { (result) in
+            switch result {
+            case .success(let broadcast):
+                print("Update Success", broadcast)
+            case .failure(let err):
+                print("Update failure", err)
+            }
+        }
+    }
+
 }
