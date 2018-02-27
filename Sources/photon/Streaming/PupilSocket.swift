@@ -29,6 +29,7 @@ public class PupilSocket: PupilSocketProtocol {
     private var writeBuffer: ThreadSafeArray<UInt8>
     
     public func write(_ data: Data) {
+        print("Endpoint got: " data.count)
         self.writeBuffer.append(contentsOf: [UInt8](data))
         self.sendBytesToServer(length: data.count)
     }
