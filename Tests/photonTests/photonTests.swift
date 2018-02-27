@@ -29,5 +29,29 @@ class photonTests: XCTestCase {
         
         server?.stop()
     }
+    
+//    func test_comeon() {
+//        let photon = Photon("krad.tv")
+//        
+//        let e = self.expectation(description: "actually hit the api")
+//        photon.login(countryCode: .usa,
+//                     phoneNumber: "5555551212",
+//                     password: "password")
+//        { (user, err) in
+//            XCTAssertNotNil(user)
+//            XCTAssertNil(err)
+//            print(user!)
+//            photon.startBroadcast(name: "kubrick for the win.", onReady: { (socket, err) in
+//                print(socket)
+//                print(err)
+//                XCTAssertNotNil(socket)
+//                XCTAssertNil(err)
+//                e.fulfill()
+//            })
+//        }
+//        
+//        self.wait(for: [e], timeout: 10)
+//
+//    }
 
 }

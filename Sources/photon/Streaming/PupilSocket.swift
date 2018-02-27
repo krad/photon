@@ -82,8 +82,7 @@ public class PupilSocket: PupilSocketProtocol {
     internal init(identifier: String, server: PupilServer,  onReady: @escaping (PupilSocket) -> ()) throws {
         if let port = server.ports.filter({ $0.proto == "tcp" }).first {
             let sock = try Socket.create()
-            print("Attempting to connect to \(server.host):\(port.port)")
-            try sock.connect(to: server.host, port: port.port, timeout: 3)
+            try sock.connect(to: server.host, port: port.port)
             
             self.running        = true
             self.socket         = sock
