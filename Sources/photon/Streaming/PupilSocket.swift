@@ -40,6 +40,7 @@ public class PupilSocket: PupilSocketProtocol {
                 let data  = Data(bytes)
                 let wrote = try self.socket.write(from: data)
                 self.bytesWrote += wrote
+                print("Wrote:", wrote)
                 self.writeBuffer.removeFirst(n: wrote)
             } catch let error { print("Couldn't write bytes to server:", error.localizedDescription) }
         }
