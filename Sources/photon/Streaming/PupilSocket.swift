@@ -41,7 +41,6 @@ public class PupilSocket: PupilSocketProtocol {
                 let data  = Data(bytes)
                 let wrote = try self.socket.write(from: data)
                 self.bytesWrote += wrote
-                print("Wrote:", wrote)
                 self.writeBuffer.removeFirst(n: wrote)
             } catch let error { print("Couldn't write bytes to server:", error.localizedDescription) }
         }
@@ -84,8 +83,8 @@ public class PupilSocket: PupilSocketProtocol {
     internal init(identifier: String, server: PupilServer,  onReady: @escaping (PupilSocket) -> ()) throws {
         if let port = server.ports.filter({ $0.proto == "tcp" }).first {
             let sock = try Socket.create()
-            try sock.connect(to: server.host, port: port.port)
-            
+//            try sock.connect(to: server.host, port: port.port)
+            try sock.connect(to: "0.0.0.0", port: 42000)
             self.running        = true
             self.socket         = sock
             self.port           = port.port
