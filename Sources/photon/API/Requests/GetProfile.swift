@@ -1,3 +1,5 @@
+import workshop
+
 public struct GetProfile: APIRequest {
 
     public typealias Response = User

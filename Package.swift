@@ -12,11 +12,12 @@ let package = Package(
     ],
     dependencies: [
 	.package(url: "https://github.com/IBM-Swift/BlueSocket.git", from: "0.12.77"),
+	.package(url: "https://github.com/krad/workshop.git", from: "1.0.0"),
     ],
     targets: [
         .target(
             name: "photon",
-            dependencies: ["Socket"]),
+            dependencies: ["Socket", "workshop"]),
         .testTarget(
             name: "photonTests",
             dependencies: ["photon"]),

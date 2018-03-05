@@ -1,3 +1,5 @@
+import workshop
+
 public struct GetBroadcast: APIRequest {
     public typealias Response = Broadcast
     
