@@ -1,6 +1,7 @@
 import Foundation
 
 public typealias LoginCallback = (User?, Error?) -> Void
+public typealias BroadcastsCallback = ([Broadcast]?, Error?) -> Void
 
 public protocol PhotonProtocol {
     func startBroadcast(name title: String, onReady: @escaping BroadcastBeginCallback)
@@ -29,6 +30,18 @@ public class Photon: PhotonProtocol {
                 onComplete(user, nil)
             case .failure(let error):
                 self.currentUser = nil
+                onComplete(nil, error)
+            }
+        }
+    }
+    
+    public func getBroadcasts(onComplete: @escaping BroadcastsCallback) {
+        let request = GetBroadcasts()
+        self.webClient.send(request) { result in
+            switch result {
+            case .success(let broadcasts):
+                onComplete(broadcasts, nil)
+            case .failure(let error):
                 onComplete(nil, error)
             }
         }
