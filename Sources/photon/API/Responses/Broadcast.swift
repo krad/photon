@@ -8,7 +8,7 @@ public struct Broadcast: Codable {
     public var status: String
     public var thumbnails: [String]?
     public var user: User?
-    public var createdAt: Date?
+    public var createdAt: UInt64?
     
     public var pupil: [PupilServer]?
     
