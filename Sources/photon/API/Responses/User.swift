@@ -6,6 +6,6 @@ public struct User: Codable {
     public var username: String?
     public var firstName: String?
     public var lastName: String?
-    public var createdAt: Date
+    public var createdAt: Date?
     
 }

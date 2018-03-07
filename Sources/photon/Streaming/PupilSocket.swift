@@ -105,11 +105,9 @@ public class PupilSocket: PupilSocketProtocol {
                         if let msg = String(data: readBuf[0..<read], encoding: .utf8) {
                             switch msg {
                             case "HI\n":
-                                print("Got greeting")
                                 try self.socket.write(from: "\(identifier)\n")
                                 readBuf.count = 0
                             case "BEGIN\n":
-                                print("Begining")
                                 onReady(self)
                                 self.running = false
                             default:
