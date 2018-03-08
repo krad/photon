@@ -38,6 +38,7 @@ class photonTests: XCTestCase {
         photon.webClient    = client
         
         XCTAssertTrue(queue(response: "user.json", into: session))
+        XCTAssertNil(photon.currentUser)
         
         let e = self.expectation(description: "Should return a profile when we're logged in")
         photon.getMyProfile { (user, err) in
@@ -46,6 +47,8 @@ class photonTests: XCTestCase {
             e.fulfill()
         }
         self.wait(for: [e], timeout: 2)
+        
+        XCTAssertNotNil(photon.currentUser)
         
     }
 
