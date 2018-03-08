@@ -1,10 +1,15 @@
 import Foundation
 
-public typealias LoginCallback = (User?, Error?) -> Void
+public typealias UserCallback       = (User?, Error?) -> Void
+public typealias BroadcastCallback  = (Broadcast?, Error?) -> Void
 public typealias BroadcastsCallback = ([Broadcast]?, Error?) -> Void
 
 public protocol PhotonProtocol {
+    func login(countryCode: CountryCode, phoneNumber: String, password: String, onComplete: @escaping UserCallback)
+    func getBroadcasts(onComplete: @escaping BroadcastsCallback)
     func startBroadcast(name title: String, onReady: @escaping BroadcastBeginCallback)
+    func update(broadcast: Broadcast, onComplete: @escaping BroadcastCallback)
+    func getMyProfile(onComplete: @escaping UserCallback)
 }
 
 public class Photon: PhotonProtocol {
@@ -20,7 +25,7 @@ public class Photon: PhotonProtocol {
     public func login(countryCode: CountryCode,
                       phoneNumber: String,
                       password: String,
-                      onComplete: @escaping LoginCallback)
+                      onComplete: @escaping UserCallback)
     {
         let request = PhoneLogin(countryCode: countryCode, phoneNumber: phoneNumber, password: password)
         self.webClient.send(request) { (result) in
@@ -39,10 +44,8 @@ public class Photon: PhotonProtocol {
         let request = GetBroadcasts()
         self.webClient.send(request) { result in
             switch result {
-            case .success(let broadcasts):
-                onComplete(broadcasts, nil)
-            case .failure(let error):
-                onComplete(nil, error)
+            case .success(let broadcasts): onComplete(broadcasts, nil)
+            case .failure(let error): onComplete(nil, error)
             }
         }
     }
@@ -63,17 +66,25 @@ public class Photon: PhotonProtocol {
         }
     }
     
-    public func update(broadcast: Broadcast) {
+    public func update(broadcast: Broadcast, onComplete: @escaping BroadcastCallback) {
         let request = UpdateBroadcast(broadcastID: broadcast.broadcastID,
                                       title: broadcast.broadcastID,
                                       status: broadcast.status,
                                       thumbnails: broadcast.thumbnails)
         self.webClient.send(request) { (result) in
             switch result {
-            case .success(let broadcast):
-                print("Update Success", broadcast)
-            case .failure(let err):
-                print("Update failure", err)
+            case .success(let broadcast): onComplete(broadcast, nil)
+            case .failure(let error): onComplete(nil, error)
+            }
+        }
+    }
+    
+    public func getMyProfile(onComplete: @escaping UserCallback) {
+        let request = GetProfile()
+        self.webClient.send(request) { (result) in
+            switch result {
+            case .success(let user): onComplete(user, nil)
+            case .failure(let error): onComplete(nil, error)
             }
         }
     }

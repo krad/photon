@@ -29,29 +29,24 @@ class photonTests: XCTestCase {
         
         server?.stop()
     }
-    
-//    func test_comeon() {
-//        let photon = Photon("krad.tv")
-//
-//        let e = self.expectation(description: "actually hit the api")
-//        photon.login(countryCode: .usa,
-//                     phoneNumber: "5555551212",
-//                     password: "password")
-//        { (user, err) in
-//            XCTAssertNotNil(user)
-//            XCTAssertNil(err)
-//            print(user!)
-//            photon.startBroadcast(name: "kubrick for the win.", onReady: { (socket, err) in
-//                print(socket)
-//                print(err)
-//                XCTAssertNotNil(socket)
-//                XCTAssertNil(err)
-//                e.fulfill()
-//            })
-//        }
-//
-//        self.wait(for: [e], timeout: 10)
-//
-//    }
+
+    func test_that_we_can_get_our_profile() {
+
+        let session         = MockURLSession()
+        let client          = PhotonWebAPI(host: "krad.tv", session: session)
+        let photon          = Photon("krad.tv")
+        photon.webClient    = client
+        
+        XCTAssertTrue(queue(response: "user.json", into: session))
+        
+        let e = self.expectation(description: "Should return a profile when we're logged in")
+        photon.getMyProfile { (user, err) in
+            XCTAssertNotNil(user)
+            XCTAssertNil(err)
+            e.fulfill()
+        }
+        self.wait(for: [e], timeout: 2)
+        
+    }
 
 }
