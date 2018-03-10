@@ -83,8 +83,7 @@ public class Photon: PhotonProtocol {
             }
         }
     }
-    
-    
+
     public func getBroadcasts(onComplete: @escaping BroadcastsCallback) {
         let request = GetBroadcasts()
         self.webClient.send(request) { result in
