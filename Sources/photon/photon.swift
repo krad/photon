@@ -8,6 +8,7 @@ public protocol PhotonProtocol {
     func signup(countryCode: CountryCode, phoneNumber: String, onComplete: @escaping UserCallback)
     func verify(countryCode: CountryCode, phoneNumber: String, code: String, onComplete: @escaping UserCallback)
     func login(countryCode: CountryCode, phoneNumber: String, password: String, onComplete: @escaping UserCallback)
+    func update(username: String?, password: String?, firstName: String?, lastName: String?, onComplete: @escaping UserCallback)
     func getBroadcasts(onComplete: @escaping BroadcastsCallback)
     func startBroadcast(name title: String, onReady: @escaping BroadcastBeginCallback)
     func update(broadcast: Broadcast, onComplete: @escaping BroadcastCallback)
@@ -72,6 +73,17 @@ public class Photon: PhotonProtocol {
             }
         }
     }
+    
+    public func update(username: String?, password: String?, firstName: String?, lastName: String?, onComplete: @escaping UserCallback) {
+        let request = UpdateProfile(username: username, password: password, firstName: firstName, lastName: lastName)
+        self.webClient.send(request) { result in
+            switch result {
+            case .success(let user): onComplete(user, nil)
+            case .failure(let error): onComplete(nil, error)
+            }
+        }
+    }
+    
     
     public func getBroadcasts(onComplete: @escaping BroadcastsCallback) {
         let request = GetBroadcasts()
