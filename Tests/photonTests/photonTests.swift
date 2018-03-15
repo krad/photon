@@ -51,5 +51,23 @@ class photonTests: XCTestCase {
         XCTAssertNotNil(photon.currentUser)
         
     }
+    
+    func test_that_we_can_view_a_broadcast() {
+        let session         = MockURLSession()
+        let client          = PhotonWebAPI(host: "krad.tv", session: session)
+        let photon          = Photon("krad.tv")
+        photon.webClient    = client
+
+        XCTAssertTrue(queue(response: "view_broadcast.json", into: session))
+        
+        let e = self.expectation(description: "Should return an empty string when we view a broadcast")
+        photon.view(broadcastID: "05299e65-2f4c-4c42-8c1a-b1b953b6445b") { msg, err in
+            XCTAssertNotNil(msg)
+            XCTAssertNil(err)
+            e.fulfill()
+        }
+        
+        self.wait(for: [e], timeout: 2)
+    }
 
 }

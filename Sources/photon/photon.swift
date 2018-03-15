@@ -3,6 +3,7 @@ import Foundation
 public typealias UserCallback       = (User?, Error?) -> Void
 public typealias BroadcastCallback  = (Broadcast?, Error?) -> Void
 public typealias BroadcastsCallback = ([Broadcast]?, Error?) -> Void
+public typealias MessageCallback    = (Dictionary<String, String>?, Error?) -> Void
 
 public protocol PhotonProtocol {
     func signup(countryCode: CountryCode, phoneNumber: String, onComplete: @escaping UserCallback)
@@ -14,6 +15,7 @@ public protocol PhotonProtocol {
     func startBroadcast(name title: String, onReady: @escaping BroadcastBeginCallback)
     func update(broadcast: Broadcast, onComplete: @escaping BroadcastCallback)
     func getMyProfile(onComplete: @escaping UserCallback)
+    func view(broadcastID: String, onComplete: @escaping MessageCallback)
 }
 
 public class Photon: PhotonProtocol {
@@ -147,5 +149,16 @@ public class Photon: PhotonProtocol {
             }
         }
     }
-
+    
+    public func view(broadcastID: String, onComplete: @escaping MessageCallback) {
+        let request = ViewBroadcast(broadcastID: broadcastID)
+        self.webClient.send(request) { result in
+            switch result {
+            case .success(let msg): onComplete(msg, nil)
+            case .failure(let error): onComplete(nil, error)
+            }
+        }
+    }
+    
+//05299e65-2f4c-4c42-8c1a-b1b953b6445b
 }
