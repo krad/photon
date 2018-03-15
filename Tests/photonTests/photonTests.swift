@@ -58,9 +58,9 @@ class photonTests: XCTestCase {
         let photon          = Photon("krad.tv")
         photon.webClient    = client
 
-        XCTAssertTrue(queue(response: "view_broadcast.json", into: session))
+        XCTAssertTrue(queue(response: "empty_response.json", into: session))
         
-        let e = self.expectation(description: "Should return an empty string when we view a broadcast")
+        let e = self.expectation(description: "Should submit a 'view' to the broadcast")
         photon.view(broadcastID: "05299e65-2f4c-4c42-8c1a-b1b953b6445b") { msg, err in
             XCTAssertNotNil(msg)
             XCTAssertNil(err)
@@ -68,6 +68,42 @@ class photonTests: XCTestCase {
         }
         
         self.wait(for: [e], timeout: 2)
+    }
+    
+    func test_that_we_can_react_to_a_broadcast() {
+        let session         = MockURLSession()
+        let client          = PhotonWebAPI(host: "krad.tv", session: session)
+        let photon          = Photon("krad.tv")
+        photon.webClient    = client
+        
+        XCTAssertTrue(queue(response: "empty_response.json", into: session))
+        XCTAssertTrue(queue(response: "empty_response.json", into: session))
+        XCTAssertTrue(queue(response: "empty_response.json", into: session))
+        
+        let e = self.expectation(description: "Should like a broadcast")
+        photon.react(with: .like, for: "05299e65-2f4c-4c42-8c1a-b1b953b6445b") { (msg, err) in
+            XCTAssertNotNil(msg)
+            XCTAssertNil(err)
+            e.fulfill()
+        }
+        self.wait(for: [e], timeout: 2)
+        
+        let e2 = self.expectation(description: "Should dislike a broadcast")
+        photon.react(with: .dislike, for: "05299e65-2f4c-4c42-8c1a-b1b953b6445b") { (msg, err) in
+            XCTAssertNotNil(msg)
+            XCTAssertNil(err)
+            e2.fulfill()
+        }
+        self.wait(for: [e2], timeout: 2)
+
+        let e3 = self.expectation(description: "Should flag a broadcast")
+        photon.react(with: .report, for: "05299e65-2f4c-4c42-8c1a-b1b953b6445b") { (msg, err) in
+            XCTAssertNotNil(msg)
+            XCTAssertNil(err)
+            e3.fulfill()
+        }
+        self.wait(for: [e3], timeout: 2)
+
     }
 
 }

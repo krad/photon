@@ -5,6 +5,12 @@ public typealias BroadcastCallback  = (Broadcast?, Error?) -> Void
 public typealias BroadcastsCallback = ([Broadcast]?, Error?) -> Void
 public typealias MessageCallback    = (Dictionary<String, String>?, Error?) -> Void
 
+public enum Reaction: String, Encodable {
+    case like       = "like"
+    case dislike    = "dislike"
+    case report     = "flagged"
+}
+
 public protocol PhotonProtocol {
     func signup(countryCode: CountryCode, phoneNumber: String, onComplete: @escaping UserCallback)
     func verify(countryCode: CountryCode, phoneNumber: String, code: String, onComplete: @escaping UserCallback)
@@ -16,6 +22,7 @@ public protocol PhotonProtocol {
     func update(broadcast: Broadcast, onComplete: @escaping BroadcastCallback)
     func getMyProfile(onComplete: @escaping UserCallback)
     func view(broadcastID: String, onComplete: @escaping MessageCallback)
+    func react(with opinion: Reaction, for broadcastID: String, onComplete: @escaping MessageCallback)
 }
 
 public class Photon: PhotonProtocol {
@@ -160,5 +167,14 @@ public class Photon: PhotonProtocol {
         }
     }
     
-//05299e65-2f4c-4c42-8c1a-b1b953b6445b
+    public func react(with opinion: Reaction, for broadcastID: String, onComplete: @escaping MessageCallback) {
+        let request = ReactionRequest(broadcastID: broadcastID, reaction: opinion)
+        self.webClient.send(request) { result in
+            switch result {
+            case .success(let msg): onComplete(msg, nil)
+            case .failure(let error): onComplete(nil, error)
+            }
+        }
+    }
+    
 }

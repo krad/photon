@@ -20,7 +20,6 @@ public class PhotonWebAPI: APIClient {
         let task = self.session.dataTask(with: req) { data, response, err in
             if let jsonData = data {
                 do {
-                    //print(String(data: jsonData, encoding: .utf8))
                     if let httpResponse = response as? HTTPURLResponse {
                         if httpResponse.statusCode == 200 {
                             let apiResponse = try JSONDecoder().decode(T.Response.self, from: jsonData)
