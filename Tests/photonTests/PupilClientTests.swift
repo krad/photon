@@ -36,6 +36,7 @@ class PupilClientTests: XCTestCase {
                                   user: nil,
                                   createdAt: nil,
                                   views: nil,
+                                  opinion: nil,
                                   pupil: [ps])
         
         let e = self.expectation(description: "Server start up")
@@ -67,6 +68,7 @@ class PupilClientTests: XCTestCase {
                                   user: nil,
                                   createdAt: nil,
                                   views: nil,
+                                  opinion: nil,
                                   pupil: servers)
         
         let e = self.expectation(description: "Server start up")
