@@ -61,7 +61,6 @@ public class PhotonWebAPI: APIClient {
         return URL(string: "\(proto)://\(host)/\(request.resourceName)")!
     }
     
-    
     /// URLSession does this weird thing with cookies where it only uses them for certain base paths
     ///  Was running into a bug where a cookie was being set on /users/login but not being used on /broadcasts
     ///  Hence this terrible terrible work around after each request.

@@ -5,7 +5,7 @@ public typealias BroadcastCallback  = (Broadcast?, Error?) -> Void
 public typealias BroadcastsCallback = ([Broadcast]?, Error?) -> Void
 public typealias MessageCallback    = (Dictionary<String, String>?, Error?) -> Void
 
-public enum Reaction: String, Encodable {
+public enum Reaction: String, Codable {
     case like       = "like"
     case dislike    = "dislike"
     case report     = "flagged"

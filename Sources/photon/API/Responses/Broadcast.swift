@@ -10,6 +10,7 @@ public struct Broadcast: Codable {
     public var user: User?
     public var createdAt: UInt64?
     public var views: Int?
+    public var opinion: Reaction?
     
     public var pupil: [PupilServer]?
     
