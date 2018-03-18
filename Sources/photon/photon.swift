@@ -30,8 +30,8 @@ public protocol PhotonProtocol {
 public class Photon: PhotonProtocol {
     
     internal var webClient: PhotonWebAPI
-    public private(set) var currentUser: User?
-    public private(set) var currentBroadcast: Broadcast?
+    public var currentUser: User?
+    public var currentBroadcast: Broadcast?
     
     public init(_ host: String) {
         self.webClient = PhotonWebAPI(host: host)
