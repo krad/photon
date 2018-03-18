@@ -190,7 +190,12 @@ public class Photon: PhotonProtocol {
             case .failure(let err): onComplete(nil, err)
             }
         }
-        
+    }
+    
+    func upload(data: Data, with uploadInfo: SignedUploadInfo) {
+        if let url = URL(string: uploadInfo.url) {
+            
+        }
     }
     
 }
