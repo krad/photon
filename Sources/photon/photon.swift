@@ -4,6 +4,7 @@ public typealias UserCallback       = (User?, Error?) -> Void
 public typealias BroadcastCallback  = (Broadcast?, Error?) -> Void
 public typealias BroadcastsCallback = ([Broadcast]?, Error?) -> Void
 public typealias MessageCallback    = (Dictionary<String, String>?, Error?) -> Void
+public typealias SigningCallback    = (SignedUploadInfo?, Error?) -> Void
 
 public enum Reaction: String, Codable {
     case like       = "like"
@@ -23,6 +24,7 @@ public protocol PhotonProtocol {
     func getMyProfile(onComplete: @escaping UserCallback)
     func view(broadcastID: String, onComplete: @escaping MessageCallback)
     func react(with opinion: Reaction, for broadcastID: String, onComplete: @escaping MessageCallback)
+    func requestUploadSigning(fileName: String, contentType: String, onComplete: @escaping SigningCallback)
 }
 
 public class Photon: PhotonProtocol {
@@ -175,6 +177,20 @@ public class Photon: PhotonProtocol {
             case .failure(let error): onComplete(nil, error)
             }
         }
+    }
+    
+    public func requestUploadSigning(fileName: String,
+                                     contentType: String,
+                                     onComplete: @escaping SigningCallback)
+    {
+        let request = UploadSignRequest(fileName: fileName, contentType: contentType)
+        self.webClient.send(request) { (result) in
+            switch result {
+            case .success(let resp): onComplete(resp, nil)
+            case .failure(let err): onComplete(nil, err)
+            }
+        }
+        
     }
     
 }
