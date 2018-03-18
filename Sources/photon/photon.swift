@@ -1,4 +1,7 @@
 import Foundation
+#if os(iOS)
+    import UIKit
+#endif
 
 public typealias UserCallback       = (User?, Error?) -> Void
 public typealias BroadcastCallback  = (Broadcast?, Error?) -> Void
@@ -194,10 +197,9 @@ public class Photon: PhotonProtocol {
         }
     }
     
-    func upload(data: Data, with uploadInfo: SignedUploadInfo) {
-        if let url = URL(string: uploadInfo.url) {
-            
-        }
+    #if os(iOS)
+    public func setCurrentUserImage(image: UIImage) {
+        self.currentUser?.image = image
     }
-    
+    #endif
 }
