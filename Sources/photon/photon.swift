@@ -30,8 +30,8 @@ public protocol PhotonProtocol {
 public class Photon: PhotonProtocol {
     
     internal var webClient: PhotonWebAPI
-    public var currentUser: User?
-    public var currentBroadcast: Broadcast?
+    public private(set) var currentUser: User?
+    public private(set) var currentBroadcast: Broadcast?
     
     public init(_ host: String) {
         self.webClient = PhotonWebAPI(host: host)
@@ -90,7 +90,9 @@ public class Photon: PhotonProtocol {
         let request = UpdateProfile(username: username, password: password, firstName: firstName, lastName: lastName)
         self.webClient.send(request) { result in
             switch result {
-            case .success(let user): onComplete(user, nil)
+            case .success(let user):
+                self.currentUser = user
+                onComplete(user, nil)
             case .failure(let error): onComplete(nil, error)
             }
         }
