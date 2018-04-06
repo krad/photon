@@ -2,7 +2,7 @@ import XCTest
 @testable import photon
 import Socket
 
-class PupilClientTests: XCTestCase {
+class PupilSocketTests: XCTestCase {
 
     func test_that_we_can_setup_a_streaming_socket_to_a_pupil_server() {
         

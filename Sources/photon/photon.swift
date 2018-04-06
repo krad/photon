@@ -40,6 +40,13 @@ public class Photon: PhotonProtocol {
         self.webClient = PhotonWebAPI(host: host)
     }
     
+    
+    /// Signs up for an account using a phone number
+    ///
+    /// - Parameters:
+    ///   - countryCode: Country Code of the phone number
+    ///   - phoneNumber: Phone number that can receive SMS messages
+    ///   - onComplete: Callback on success / failure
     public func signup(countryCode: CountryCode,
                        phoneNumber: String,
                        onComplete: @escaping UserCallback)
@@ -57,6 +64,13 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    /// Verify phone number using an authentication token
+    ///
+    /// - Parameters:
+    ///   - countryCode: Country Code of the phone number associated with the account
+    ///   - phoneNumber: Phone number that can receive SMS messages
+    ///   - code: Code recieved via an SMS used to verify account identity
+    ///   - onComplete: Callback on success / failure
     public func verify(countryCode: CountryCode, phoneNumber: String, code: String, onComplete: @escaping UserCallback) {
         let request = VerifyPhoneNumber(countryCode: countryCode, phoneNumber: phoneNumber, verificationCode: code)
         self.webClient.send(request) { result in
@@ -71,6 +85,14 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Login with a phone number
+    ///
+    /// - Parameters:
+    ///   - countryCode: Country code of the phone number associated with the account
+    ///   - phoneNumber: Phone number tied to the account
+    ///   - password: Password for the account
+    ///   - onComplete: Callback on success / failure
     public func login(countryCode: CountryCode,
                       phoneNumber: String,
                       password: String,
@@ -89,6 +111,16 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Update's a user profile (requires prior authentication)
+    /// Leave a value blank if you do not wish to update that particular attribute
+    ///
+    /// - Parameters:
+    ///   - username: Username you wish to have associated with your account
+    ///   - password: Password to be set on the account
+    ///   - firstName: First Name you wish to have associated with your account
+    ///   - lastName: Last Name you wish to have associated with your account
+    ///   - onComplete: Callback on success / failure
     public func update(username: String?, password: String?, firstName: String?, lastName: String?, onComplete: @escaping UserCallback) {
         let request = UpdateProfile(username: username, password: password, firstName: firstName, lastName: lastName)
         self.webClient.send(request) { result in
@@ -101,6 +133,10 @@ public class Photon: PhotonProtocol {
         }
     }
 
+    
+    /// Gets the most recent broadcasts available for viewing on the server
+    ///
+    /// - Parameter onComplete: Callback on success / failure
     public func getBroadcasts(onComplete: @escaping BroadcastsCallback) {
         let request = GetBroadcasts()
         self.webClient.send(request) { result in
@@ -111,6 +147,12 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Fetches details for a particular broadcast
+    ///
+    /// - Parameters:
+    ///   - broadcastID: The ID of the broadcast you are interested in
+    ///   - onComplete: Callback on success / failure
     public func getBroadcast(with broadcastID: String, onComplete: @escaping BroadcastCallback) {
         let request = GetBroadcast(broadcastID)
         self.webClient.send(request) { (result) in
@@ -121,6 +163,13 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Notifies the API you would like to begin streaming.
+    /// Returns a socket you can immediately start streaming audio / video samples to
+    ///
+    /// - Parameters:
+    ///   - title: The title of the broadcast
+    ///   - onReady: Callback on success / failure.  On success returns a broadcast struct and a socket that you can write to
     public func startBroadcast(name title: String, onReady: @escaping BroadcastBeginCallback) {
         let request = CreateBroadcast(title: title)
         self.webClient.send(request) { (result) in
@@ -137,6 +186,12 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Update broadcast details
+    ///
+    /// - Parameters:
+    ///   - broadcast: Broadcast struct with modified attribetus
+    ///   - onComplete: Callback on success / failure
     public func update(broadcast: Broadcast, onComplete: @escaping BroadcastCallback) {
         let request = UpdateBroadcast(broadcastID: broadcast.broadcastID,
                                       title: broadcast.broadcastID,
@@ -150,6 +205,10 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Gets your account profile details (requires authentication)
+    ///
+    /// - Parameter onComplete: Callback on success / failure
     public func getMyProfile(onComplete: @escaping UserCallback) {
         let request = GetProfile()
         self.webClient.send(request) { (result) in
@@ -164,6 +223,12 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Signal to the API that you have watched a broadcast.  Essentially an optional hit counter
+    ///
+    /// - Parameters:
+    ///   - broadcastID: ID of the broadcast you are watching
+    ///   - onComplete: Callback on success / failure
     public func view(broadcastID: String, onComplete: @escaping MessageCallback) {
         let request = ViewBroadcast(broadcastID: broadcastID)
         self.webClient.send(request) { result in
@@ -174,6 +239,13 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// React to a broadcast.  Used to express an opinion or notify the admin about the content of a broadcast
+    ///
+    /// - Parameters:
+    ///   - opinion: The opinion you wish to express
+    ///   - broadcastID: The ID about the broadcast you wish to react to
+    ///   - onComplete: Callback on success / failure
     public func react(with opinion: Reaction, for broadcastID: String, onComplete: @escaping MessageCallback) {
         let request = ReactionRequest(broadcastID: broadcastID, reaction: opinion)
         self.webClient.send(request) { result in
@@ -184,6 +256,13 @@ public class Photon: PhotonProtocol {
         }
     }
     
+    
+    /// Ask for a URL for an arbitrary file upload
+    ///
+    /// - Parameters:
+    ///   - fileName: The name of the file you wish to upload
+    ///   - contentType: The content-type of the file you wish to uploa
+    ///   - onComplete: Callback on success / failure.  Returns a URL you can begin a multipart upload with
     public func requestUploadSigning(fileName: String,
                                      contentType: String,
                                      onComplete: @escaping SigningCallback)
