@@ -19,7 +19,6 @@ class PupilConfigHandler: ChannelInboundHandler {
     
     func channelRead(ctx: ChannelHandlerContext, data: NIOAny) {
         let msg = self.unwrapInboundIn(data)
-        print(#function, msg)
         switch msg {
         case "HI":
             _ = ctx.triggerUserOutboundEvent(PupilConfigEvent.gotGreeting)

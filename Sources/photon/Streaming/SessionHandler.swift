@@ -17,6 +17,11 @@ class SessionHandler: ChannelInboundHandler, ChannelOutboundHandler {
         ctx.fireChannelRegistered()
     }
     
+    func channelUnregistered(ctx: ChannelHandlerContext) {
+        self.delegate.disconnected()
+        ctx.fireChannelUnregistered()
+    }
+    
     func triggerUserOutboundEvent(ctx: ChannelHandlerContext, event: Any, promise: EventLoopPromise<Void>?) {
         if let ev = event as? PupilConfigEvent {
             switch ev {
