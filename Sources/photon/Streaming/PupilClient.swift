@@ -44,7 +44,10 @@ final public class PupilClient {
             var onReady: BroadcastBeginCallback?
             
             func connected() { }
-            func ready() { onReady?(broadcast, client, nil) }
+            func ready() {
+                client?.delegate = delegate!
+                onReady?(broadcast, client, nil)
+            }
             func disconnected() { }
         }
         
