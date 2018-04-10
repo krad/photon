@@ -3,9 +3,14 @@ import NIO
 import NIOOpenSSL
 import grip
 
+public typealias BroadcastBeginCallback = (Broadcast?, PupilClient?, Error?) -> Void
+
+
 public enum PupilClientError: Error {
     case clientDoesNotSupportProtocols
     case couldNotConnect(host: String, port: Int)
+    case noServers
+    case allConnectionsFailed
 }
 
 public protocol PupilClientDelegate {
@@ -22,6 +27,48 @@ final public class PupilClient {
     internal var delegate: PupilClientDelegate
     
     private let group = MultiThreadedEventLoopGroup(numThreads: 1)
+    
+    public class func createStream(for broadcast: Broadcast,
+                                   with delegate: PupilClientDelegate,
+                                   onReady: @escaping BroadcastBeginCallback)
+    {
+        guard let servers = broadcast.pupil else {
+            onReady(broadcast, nil, PupilClientError.noServers)
+            return
+        }
+        
+        class TempDelegate: PupilClientDelegate {
+            var client: PupilClient?
+            var broadcast: Broadcast?
+            var delegate: PupilClientDelegate?
+            var onReady: BroadcastBeginCallback?
+            
+            func connected() { }
+            func ready() { onReady?(broadcast, client, nil) }
+            func disconnected() { }
+        }
+        
+        for server in servers {
+            do {
+                let tmpDelegate         = TempDelegate()
+                tmpDelegate.broadcast   = broadcast
+                tmpDelegate.delegate    = delegate
+                tmpDelegate.onReady     = onReady
+                
+                let client = try PupilClient(broadcastID: broadcast.broadcastID, delegate: tmpDelegate)
+                tmpDelegate.client = client
+                try client.connect(to: server)
+                return
+                
+            } catch {
+                print("Problem connecting to server:", error)
+            }
+        }
+        
+        onReady(broadcast, nil, PupilClientError.allConnectionsFailed)
+        return
+        
+    }
 
     public init(broadcastID: String, delegate: PupilClientDelegate) throws {
         self.broadcastID = broadcastID

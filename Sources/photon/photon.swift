@@ -22,7 +22,7 @@ public protocol PhotonProtocol {
     func update(username: String?, password: String?, firstName: String?, lastName: String?, onComplete: @escaping UserCallback)
     func getBroadcasts(onComplete: @escaping BroadcastsCallback)
     func getBroadcast(with broadcastID: String, onComplete: @escaping BroadcastCallback)
-    func startBroadcast(name title: String, onReady: @escaping BroadcastBeginCallback)
+    func startBroadcast(name title: String, delegate: PupilClientDelegate, onReady: @escaping BroadcastBeginCallback)
     func update(broadcast: Broadcast, onComplete: @escaping BroadcastCallback)
     func getMyProfile(onComplete: @escaping UserCallback)
     func view(broadcastID: String, onComplete: @escaping MessageCallback)
@@ -170,15 +170,17 @@ public class Photon: PhotonProtocol {
     /// - Parameters:
     ///   - title: The title of the broadcast
     ///   - onReady: Callback on success / failure.  On success returns a broadcast struct and a socket that you can write to
-    public func startBroadcast(name title: String, onReady: @escaping BroadcastBeginCallback) {
+    public func startBroadcast(name title: String,
+                               delegate: PupilClientDelegate,
+                               onReady: @escaping BroadcastBeginCallback) {
         let request = CreateBroadcast(title: title)
         self.webClient.send(request) { (result) in
             switch result {
             case .success(let broadcast):
-                PupilSocket.createStream(for: broadcast) { b, ps, err in
-                    if let _ = ps { self.currentBroadcast = broadcast }
+                PupilClient.createStream(for: broadcast, with: delegate) { b, pc, err in
+                    if let _ = pc { self.currentBroadcast = broadcast }
                     else { self.currentBroadcast = nil }
-                    onReady(b, ps, err)
+                    onReady(b, pc, err)
                 }
             case .failure(let error):
                 onReady(nil, nil, error)

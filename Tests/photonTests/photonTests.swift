@@ -2,14 +2,25 @@ import XCTest
 @testable import photon
 
 class photonTests: XCTestCase {
+    
+    class MockDelegate: PupilClientDelegate {
+        
+        func connected() { }
+        func ready() { }
+        func disconnected() { }
+    }
+    
+    override func setUp() {
+        super.setUp()
+        self.continueAfterFailure = false
+    }
 
     func test_that_we_can_start_a_new_broadcast_stream() {
         
-        let s = self.expectation(description: "Server startup")
-        let server = try? Server(42000) {
-            s.fulfill()
-        }
-        self.wait(for: [s], timeout: 1)
+        let s = self.expectation(description: "Wait for the server to start")
+        let server = try? Server(42000) { s.fulfill() }
+        self.wait(for: [s], timeout: 2)
+        defer { XCTAssertNoThrow(try server?.stop()) }
         
         let session    = MockURLSession()
         let fakeClient = PhotonWebAPI(host: "krad.tv", session: session)
@@ -19,15 +30,19 @@ class photonTests: XCTestCase {
         
         XCTAssertTrue(queue(response: "create_broadcast.json", into: session))
         
+        let delegate = MockDelegate()
+        var c: PupilClient?
         let e = self.expectation(description: "Should return a socket connected to the streaming server")
-        photon.startBroadcast(name: "My Fake Broadcast") { broadcast, socket, err in
+        photon.startBroadcast(name: "My Fake Broadcast", delegate: delegate) { broadcast, client, err in
             XCTAssertNil(err)
-            XCTAssertNotNil(socket)
+            XCTAssertNotNil(client)
+            c = client
             e.fulfill()
         }
         self.wait(for: [e], timeout: 1)
         
-        server?.stop()
+        c?.disconnect()
+        
     }
 
     func test_that_we_can_get_our_profile() {

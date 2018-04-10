@@ -22,7 +22,6 @@ public final class SessionConfigHandler: ChannelInboundHandler {
     }
     
     public func channelRead(ctx: ChannelHandlerContext, data: NIOAny) {
-        print(#function)
         let broadcastID = self.unwrapInboundIn(data)
         print(broadcastID)
         let event = SessionConfigState.got(id: broadcastID)

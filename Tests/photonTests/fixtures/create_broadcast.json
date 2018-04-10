@@ -6,7 +6,7 @@
     "createdAt": 1519337767253,
     "pupil": [
             {
-              "host": "0.0.0.0",
+              "host": "127.0.0.1",
               "ports": [{"protocol": "tcp", "port": 42000 }]
             },
             {
