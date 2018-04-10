@@ -76,8 +76,11 @@ class PupilCientTests: XCTestCase {
         delegate.readyExp   = self.expectation(description: "We should get notified when the session has been negotiated")
         
         XCTAssertNoThrow(try client?.connect(to: connectionInfo))
-        
         self.wait(for: [delegate.connectExp!, delegate.readyExp!], timeout: 2)
+        
+        delegate.disconnectExp = self.expectation(description: "We should disconnect from the server")
+        client?.disconnect()
+        self.wait(for: [delegate.disconnectExp!], timeout: 1)
 
     }
 

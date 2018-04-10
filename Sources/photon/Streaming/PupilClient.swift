@@ -63,12 +63,16 @@ final public class PupilClient {
         }        
     }
     
+    public func disconnect() {
+        try? self.channel?.close().wait()
+    }
+    
 }
 
 extension PupilClient: Writeable {
     public func write(_ data: Data) {
         var buffer = self.channel?.allocator.buffer(capacity: data.count)
         buffer?.write(bytes: data)
-        _ = self.channel?.write(buffer)
+        _ = self.channel?.writeAndFlush(buffer)
     }
 }
